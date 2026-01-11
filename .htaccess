@@ -1,0 +1,30 @@
+RewriteEngine On
+
+# -------------------------------------------------
+# 1. Tiltott belső könyvtárak
+# -------------------------------------------------
+RewriteRule ^(app|bootstrap|customize|logs|resources|vendor)(/|$) - [F,L]
+
+# -------------------------------------------------
+# 2. Dotfile-ok tiltása (.env, .git, stb)
+# -------------------------------------------------
+RewriteRule (^|/)\. - [F,L]
+
+# -------------------------------------------------
+# 3. Statikus fájlok engedélyezése
+# -------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# -------------------------------------------------
+# 4. Engedélyezett entry pointok
+# -------------------------------------------------
+RewriteRule ^index\.php$ - [L]
+RewriteRule ^result\.php$ - [L]
+RewriteRule ^webhook\.php$ - [L]
+
+# -------------------------------------------------
+# 5. Biztonsági fallback (opcionális)
+# -------------------------------------------------
+RewriteRule . index.php [L]

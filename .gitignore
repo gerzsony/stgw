@@ -1,0 +1,29 @@
+# Composer / PHP
+/vendor/
+/composer.lock
+
+# Environment
+.env
+.env.*
+.env.local
+.env.production
+.env.dev
+
+# Logs
+/logs/
+/*.log
+
+# Temporary / OS
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+# PHPUnit / Tests
+/tests/_output/
+/coverage/
+
+# IDEs
+/.vscode/
+/.idea/
+/nbproject/

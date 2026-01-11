@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>Termék teszt űrlap</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                     Roboto, Helvetica, Arial, sans-serif;
+        background: #f6f9fc;
+        color: #1f2937;
+    }
+
+    .container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 32px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+        font-size: 22px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    label {
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        margin-bottom: 16px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #635bff;
+    }
+
+    .error {
+        color: #ef4444;
+        font-size: 13px;
+        margin-bottom: 12px;
+        display: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: #635bff;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    button:hover {
+        opacity: 0.95;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h1>Termék adatok</h1>
+
+        <div id="error" class="error"></div>
+
+        <form id="testForm" method="post" action="../index.php">
+
+            <label>Egyedi azonosító</label>
+            <input type="number" id="oid" value="900">
+			
+            <input type="hidden" name="did" id="did">
+
+            <button type="submit">Tovább</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function base64EncodeUtf8(str) {
+    return btoa(
+        new TextEncoder().encode(str)
+            .reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+}
+
+document.getElementById('testForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const errorBox = document.getElementById('error');
+    errorBox.style.display = 'none';
+
+	const oid = document.getElementById('oid').value;
+
+	
+    if (!Number.isInteger(Number(oid))) {
+        return showError('Az egyedi azonosító csak egész szám lehet.');
+    }	
+
+
+
+    const payload = {
+		oid: oid,
+    };
+
+    document.getElementById('did').value =
+        base64EncodeUtf8(JSON.stringify(payload));
+
+    this.submit();
+});
+
+function showError(msg) {
+    const box = document.getElementById('error');
+    box.textContent = msg;
+    box.style.display = 'block';
+}
+</script>
+
+</body>
+</html>

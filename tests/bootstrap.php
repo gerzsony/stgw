@@ -1,0 +1,26 @@
+<?php
+declare(strict_types=1);
+
+use App\Support\AppLogger;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+// Logger inicializálása
+//AppLogger::init(__DIR__ . '/../logs/test.log');
+//\App\Support\AppLogger::setTestMode(true);
+
+// APP_ROOT definiálása teszthez
+if (!defined('APP_ROOT')) {
+    define('APP_ROOT', realpath(__DIR__ . '/..'));
+}
+
+
+
+
+// Teszt környezet változó
+$_ENV['APP_ENV'] = 'test';
+$_ENV['DB_USER'] = 'test_user';
+$_ENV['DB_PASSWORD'] = 'test_pass';
+$_ENV['DB_NAME'] = 'test_db';
+$_ENV['DB_HOST'] = '127.0.0.1';
+
