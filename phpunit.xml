@@ -2,12 +2,25 @@
 <phpunit bootstrap="tests/bootstrap.php"
          colors="true"
          verbose="true"
-         stopOnFailure="false">
+         stopOnFailure="false"
+		 executionOrder="depends,defects"
+		 failOnRisky="true"
+		 failOnWarning="false"
+>
     <testsuites>
         <testsuite name="Application Test Suite">
-            <directory>tests/Unit</directory>
-            <directory>tests/Integration</directory>
-            <directory>tests/Functional</directory>
+			<testsuite name="Integration">
+				<directory>tests/Integration</directory>
+			</testsuite>
+
+			<testsuite name="Unit">
+				<directory>tests/Unit</directory>
+			</testsuite>
         </testsuite>
     </testsuites>
+    <php>
+        <env name="APP_ENV" value="test"/>
+        <env name="CI" value="true"/>
+		<env name="CI/CD" value="true"/>
+    </php>
 </phpunit>
