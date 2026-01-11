@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+        
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -22,29 +22,39 @@ jobs:
           tools: composer
           extensions: mbstring, pdo, pdo_mysql, curl, json
           coverage: none
-
+          
       - name: Install Composer dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
-
+        
       - name: Run PHPUnit
-        working-directory: ./   # not stgw/stgw (!)
+        working-directory: ./
         run: vendor/bin/phpunit --configuration phpunit.xml
 
   deploy:
     needs: build-and-test
-    if: success()  # runs only weh tests was OK
+    if: success() && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+        
       - name: Sync via SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASS }}
-          local-dir: ./stgw
+          local-dir: ./
           server-dir: /
           protocol: sftp
-          debug: true
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            **/vendor/**
+            .github/**
+            phpunit.xml
+            composer.json
+            composer.lock
+            README.md
