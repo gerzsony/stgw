@@ -29,7 +29,7 @@ jobs:
       - name: Run PHPUnit
         working-directory: ./
         run: vendor/bin/phpunit --configuration phpunit.xml
-
+        
   deploy:
     needs: build-and-test
     if: success() && github.ref == 'refs/heads/main'
@@ -38,13 +38,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Deploy via SFTP (SSH Key)
+      - name: Deploy via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
           username: ${{ secrets.SFTP_USER }}
           server: ${{ secrets.SFTP_HOST }}
-          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          password: ${{ secrets.SFTP_PASS }}
           local_path: './'
           remote_path: '/'
-          sftpArgs: '-o ConnectTimeout=10'
+          sftpArgs: '-o ConnectTimeout=10 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
           args: '--exclude=.git --exclude=.github --exclude=tests --exclude=vendor --exclude=node_modules --exclude=phpunit.xml --exclude=composer.json --exclude=composer.lock --exclude=README.md'
