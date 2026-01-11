@@ -18,6 +18,8 @@
 *.swp
 .DS_Store
 Thumbs.db
+*.bat
+
 
 # PHPUnit / Tests
 /tests/_output/
