@@ -25,7 +25,8 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist
 
-      - name: Run PHPUnit tests
+      - name: Run PHPUnit
+        working-directory: ./stgw   # a repo stgw könyvtára
         run: vendor/bin/phpunit --configuration phpunit.xml
 
   deploy:
@@ -42,7 +43,7 @@ jobs:
           server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASS }}
-          local-dir: ./
+          local-dir: ./stgw
           server-dir: /
           protocol: sftp
           debug: true
