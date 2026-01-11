@@ -38,23 +38,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Sync via SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+      - name: Deploy via SFTP (SSH Key)
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
-          server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USER }}
-          password: ${{ secrets.SFTP_PASS }}
-          local-dir: ./
-          server-dir: /
-          protocol: sftp
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/tests/**
-            **/vendor/**
-            .github/**
-            phpunit.xml
-            composer.json
-            composer.lock
-            README.md
+          server: ${{ secrets.SFTP_HOST }}
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          local_path: './'
+          remote_path: '/'
+          sftpArgs: '-o ConnectTimeout=10'
+          args: '--exclude=.git --exclude=.github --exclude=tests --exclude=vendor --exclude=node_modules --exclude=phpunit.xml --exclude=composer.json --exclude=composer.lock --exclude=README.md'
