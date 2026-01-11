@@ -16,6 +16,19 @@
             <directory>tests/Unit</directory>
         </testsuite>
     </testsuites>
+
+    <coverage>
+        <report>
+            <html outputDirectory="coverage"/>
+            <text outputFile="php://stdout" showUncoveredFiles="false"/>
+        </report>
+    </coverage>
+    
+    <source>
+        <include>
+            <directory suffix=".php">app</directory>
+        </include>
+    </source>	
     <php>
         <env name="APP_ENV" value="test"/>
         <env name="CI" value="true"/>

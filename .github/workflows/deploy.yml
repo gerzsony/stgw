@@ -28,7 +28,24 @@ jobs:
         
       - name: Run PHPUnit
         working-directory: ./
-        run: vendor/bin/phpunit --configuration phpunit.xml
+        run: vendor/bin/phpunit --coverage-text | tee coverage.txt
+
+      - name: Extract coverage percentage
+        id: coverage
+        run: |
+          COVERAGE=$(grep -oP 'Lines:\s+\K[\d.]+(?=%)' coverage.txt || echo "0")
+          echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
+          echo "Coverage: $COVERAGE%"
+      
+      - name: Update coverage badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 0580f8fcf7bbe32b832bd6f60b1f15b3
+          filename: stgw-coverage.json
+          label: coverage
+          message: ${{ steps.coverage.outputs.percentage }}%
+          color: brightgreen
         
   deploy:
     needs: build-and-test

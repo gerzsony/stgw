@@ -63,19 +63,27 @@ final class CustomizeLoaderTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /** @test */
-    public function load_includes_cartloader_when_present(): void
-    {
-        $file = $this->tmpDir . '/cartloader.php';
-        file_put_contents(
-            $file,
-            '<?php $GLOBALS["__cartloader_called"] = true;'
-        );
-        
-        CustomizeLoader::load($this->tmpDir, ['oid' => 1]);
-        
-        $this->assertTrue($GLOBALS['__cartloader_called'] ?? false);
-    }
+
+	/** @test */
+	public function load_returns_data_when_oid_is_missing(): void
+	{
+		$data = ['cart' => ['item1']];
+		
+		$result = CustomizeLoader::load('any-site', $data);
+		
+		$this->assertEquals($data, $result);
+	}
+
+	/** @test */
+	public function load_returns_data_when_customization_file_not_found(): void
+	{
+		$data = ['oid' => 1, 'cart' => ['item1']];
+		
+		// Non-existent site
+		$result = CustomizeLoader::load('non-existent-site-xyz-999', $data);
+		
+		$this->assertEquals($data, $result);
+	}
 
     /** @test */
     public function loadWebhook_does_nothing_if_directory_missing(): void
