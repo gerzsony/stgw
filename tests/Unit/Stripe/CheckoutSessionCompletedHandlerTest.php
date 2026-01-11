@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Stripe;
 
-use App\Config\Config;
+use App\Config\AppConfig;
 use App\Stripe\CheckoutSessionCompletedHandler;
 use PHPUnit\Framework\TestCase;
 
@@ -15,11 +15,11 @@ final class CheckoutSessionCompletedHandlerTest extends TestCase
         $session = (object)[
             'payment_status' => 'paid'
         ];
-
-        $config = $this->createMock(Config::class);
-
+        
+        $config = $this->createMock(AppConfig::class);
+        
         CheckoutSessionCompletedHandler::handle($session, $config);
-
+        
         $this->assertTrue(true); // no exception
     }
 
@@ -30,11 +30,11 @@ final class CheckoutSessionCompletedHandlerTest extends TestCase
             'id' => 'cs_test_123',
             'payment_status' => 'unpaid'
         ];
-
-        $config = $this->createMock(Config::class);
-
+        
+        $config = $this->createMock(AppConfig::class);
+        
         CheckoutSessionCompletedHandler::handle($session, $config);
-
+        
         $this->assertTrue(true);
     }
 
@@ -45,7 +45,7 @@ final class CheckoutSessionCompletedHandlerTest extends TestCase
             public string $id = 'cs_test_123';
             public string $payment_status = 'paid';
             public bool $livemode = false;
-
+            
             public function toArray(): array
             {
                 return [
@@ -58,13 +58,14 @@ final class CheckoutSessionCompletedHandlerTest extends TestCase
                 ];
             }
         };
-
-        $config = $this->createMock(Config::class);
-        $config->method('get')->with('customization_dir')->willReturn('/tmp');
-
-        // nincs assert → az a lényeg, hogy ne dobjon hibát
+        
+        $config = $this->createMock(AppConfig::class);
+        $config->method('get')
+               ->with('customization_dir')
+               ->willReturn('/tmp');
+        
         CheckoutSessionCompletedHandler::handle($session, $config);
-
+        
         $this->assertTrue(true);
     }
 }
