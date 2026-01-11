@@ -18,8 +18,8 @@ final class CustomizeLoaderTest extends TestCase
         $this->tmpDir = sys_get_temp_dir() . '/customize_test_' . uniqid();
         mkdir($this->tmpDir, 0777, true);
         
-        // Logger should already be initialized in bootstrap.php
-        // This is just a safety check
+        // Ensure logger is initialized for these tests
+        // If AppLogger is already initialized in bootstrap, this is redundant but safe
         try {
             AppLogger::get();
         } catch (\RuntimeException $e) {

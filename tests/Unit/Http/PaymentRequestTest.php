@@ -1,13 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace Tests\Unit\Http;
 
 use App\Http\PaymentRequest;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class PaymentRequestTest extends TestCase
+final class PaymentRequestTest extends TestCase
 {
-    public function test_fromRequest_parses_valid_did_payload(): void
+    /** @test */
+    public function it_parses_valid_did_payload(): void
     {
         $cart = [
             ['name' => 'Item 1', 'price' => 1000, 'qty' => 2, 'metadata' => []],
@@ -20,7 +23,8 @@ class PaymentRequestTest extends TestCase
         $this->assertEquals($cart, $result);
     }
 
-    public function test_fromRequest_fails_when_did_is_missing(): void
+    /** @test */
+    public function it_fails_when_did_is_missing(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Missing payment data');
@@ -28,7 +32,8 @@ class PaymentRequestTest extends TestCase
         PaymentRequest::fromRequest([]);
     }
 
-    public function test_fromRequest_fails_when_did_is_not_base64(): void
+    /** @test */
+    public function it_fails_when_did_is_not_base64(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Invalid base64 payment data');
@@ -36,7 +41,8 @@ class PaymentRequestTest extends TestCase
         PaymentRequest::fromRequest(['did' => 'not-valid-base64!!!']);
     }
 
-    public function test_fromRequest_fails_when_did_is_not_json(): void
+    /** @test */
+    public function it_fails_when_did_is_not_json(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Invalid JSON payment data');
@@ -44,7 +50,8 @@ class PaymentRequestTest extends TestCase
         PaymentRequest::fromRequest(['did' => base64_encode('not json')]);
     }
 
-    public function test_fromRequest_fails_when_decoded_json_is_not_array(): void
+    /** @test */
+    public function it_fails_when_decoded_json_is_not_array(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Invalid JSON payment data');
@@ -52,7 +59,8 @@ class PaymentRequestTest extends TestCase
         PaymentRequest::fromRequest(['did' => base64_encode('"just a string"')]);
     }
 
-    public function test_fromResultRequest_returns_instance_with_session_id(): void
+    /** @test */
+    public function it_returns_instance_with_session_id(): void
     {
         $sessionId = 'test_session_123';
         
@@ -62,7 +70,8 @@ class PaymentRequestTest extends TestCase
         $this->assertEquals($sessionId, $request->getSessionId());
     }
 
-    public function test_fromResultRequest_fails_when_sid_is_missing(): void
+    /** @test */
+    public function it_fails_when_sid_is_missing(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Missing or invalid session ID');
@@ -70,7 +79,8 @@ class PaymentRequestTest extends TestCase
         PaymentRequest::fromResultRequest([]);
     }
 
-    public function test_fromResultRequest_fails_when_sid_is_empty(): void
+    /** @test */
+    public function it_fails_when_sid_is_empty(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Missing or invalid session ID');
@@ -78,4 +88,3 @@ class PaymentRequestTest extends TestCase
         PaymentRequest::fromResultRequest(['sid' => '']);
     }
 }
-
