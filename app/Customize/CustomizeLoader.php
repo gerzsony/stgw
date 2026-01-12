@@ -29,6 +29,12 @@ final class CustomizeLoader
             require_once $file;
             if (function_exists('onPaymentIndex')) {
                 $result = onPaymentIndex($data);
+
+				if (!isset($result['cart']) || !is_array($result['cart'])) {
+					AppLogger::get()->warning('Customization returned invalid data, fallback used');
+					return $data;
+				}				
+				
                 return is_array($result) ? $result : $data;
             }
         }
